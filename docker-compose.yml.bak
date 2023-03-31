@@ -1,0 +1,58 @@
+version: '3.7'
+
+services:
+  rocketchat:
+    image: rocket.chat:5.0
+    restart: unless-stopped
+    volumes:
+      - /app/uploads:/app/uploads
+      - /app/custom_scripts:/app/custom_scripts
+    environment:
+      - ROOT_URL=http://localhost:3000
+      - MONGO_URL=mongodb://rocketchat-db:27017/rocketchat
+      - MONGO_OPLOG_URL=mongodb://rocketchat-db:27017/local
+      - PORT=3000
+      - ADMIN_USERNAME=admin
+      - ADMIN_PASS=${ADMIN_PASSWORD}
+      - ADMIN_EMAIL=${ADMIN_USERNAME}
+      - DISABLE_ANONYMOUS_READ=true
+      - DISABLE_ANONYMOUS_WRITE=true
+      - SCRIPTS_ALLOWED=login
+      - SCRIPTS_MESSAGE_ALLOW=login
+      - SESSION_LENGTH=120
+      - HUBOT_LIFETIME=1
+      - HUBOT_NAME=RocketchatBot
+      - HUBOT_OWNER=YourName
+      - HUBOT_DESCRIPTION=Robotassistant
+      - HTTP_PROXY=http://nginx:80
+    depends_on:
+      - rocketchat-db
+    networks:
+      - rocketchat_network
+
+  rocketchat-db:
+    image: bitnami/mongodb:5.0
+    restart: unless-stopped
+    volumes:
+      - /data:/bitnami/mongodb
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${MONGODB_ADMIN_USERNAME}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGODB_ADMIN_PASSWORD}
+    networks:
+      - rocketchat_network
+
+  nginx:
+    image: nginx:1.21.3-alpine
+    restart: unless-stopped
+    volumes:
+      - ./etc/nginx:/etc/nginx/conf.d
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - rocketchat
+    networks:
+      - rocketchat_network
+
+networks:
+  rocketchat_network:
