@@ -1,15 +1,8 @@
-
-volumes:
-  rocketchat-uploads:
-  rocketchat-mongodb:
-  traefik-certificates:
-  rocketchat-custom-scripts:
-
 services:
   mongodb:
     image: bitnami/mongodb:5.0
     volumes:
-     - rocketchat-mongodb:/bitnami/mongodb
+     - ./rocketchat-mongodb:/bitnami/mongodb
     environment:
       MONGODB_ENABLE_JOURNAL: true
       MONGO_INITDB_ROOT_USERNAME: root
@@ -26,8 +19,8 @@ services:
   rocketchat:
     image: rocket.chat:5.0
     volumes:
-      - rocketchat-uploads:/app/uploads
-      - rocketchat-custom-scripts:/app/custom_scripts
+      - ./rocketchat-uploads:/app/uploads
+      - ./rocketchat-custom-scripts:/app/custom_scripts
     environment:
       PORT: 3000
       ROOT_URL: https://rocketchat.sitetesting.fun
@@ -116,7 +109,7 @@ services:
       - "--global.sendAnonymousUsage=false"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - traefik-certificates:/etc/traefik/acme
+      - ./traefik-certificates:/etc/traefik/acme
     ports:
       - "80:80"
       - "443:443"
