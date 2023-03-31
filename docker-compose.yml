@@ -47,6 +47,10 @@ services:
       SCRIPTS_ALLOWED: login
       SCRIPTS_MESSAGE_ALLOW: login
       SESSION_LENGTH: 120
+      PLUGIN_DISCORD: https://github.com/RocketChat/discord
+      PLUGIN_IDLE_LOGOUT_TIMEOUT: 120000
+      PLUGIN_IDLE_LOGOUT_EXCEPT: [] # Add exceptions here
+      PLUGIN_IDLE_LOGOUT_ENABLE: true
     healthcheck:
       test: >
          /usr/local/bin/node -e '
