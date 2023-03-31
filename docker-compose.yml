@@ -9,7 +9,7 @@ services:
     # Image tag (replace with yours)
     image: bitnami/mongodb:5.0
     volumes:
-     - rocketchat-db:/bitnami/mongodb
+     - rocketchat-mongodb:/bitnami/mongodb
     environment:
       MONGODB_REPLICA_SET_MODE: primary
       MONGODB_REPLICA_SET_NAME: rs0
