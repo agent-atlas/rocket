@@ -110,7 +110,7 @@ services:
       - "--global.sendAnonymousUsage=false"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - traefik-certificates:/etc/traefik/acme
+      - ./traefik-certificates:/etc/traefik/acme
     ports:
       - "80:80"
       - "443:443"
