@@ -7,9 +7,10 @@ services:
     user: "1001:1001"
     environment:
       MONGODB_ENABLE_JOURNAL: true
-      MONGODB_USERNAME: root
+      MONGODB_USERNAME: admin
       MONGODB_PASSWORD: ${MONGODB_ADMIN_PASSWORD}
       MONGODB_DATABASE: rocketchat
+      MONGODB_ROOT_PASSWORD: ${MONGODB_ADMIN_PASSWORD}
     healthcheck:
       test: echo 'db.runCommand("ping").ok' | mongo mongodb:27017/test --quiet
       interval: 10s
@@ -27,8 +28,8 @@ services:
       PORT: 3000
       ROOT_URL: https://rocketchat.sitetesting.fun
       # mongodb://root:1234EWQ@mongodb:27017/rocketchat
-      MONGO_URL: mongodb://root:${MONGODB_ADMIN_PASSWORD}@mongodb:27017/rocketchat?authSource=admin
-      MONGO_OPLOG_URL: mongodb://root:${MONGODB_ADMIN_PASSWORD}@mongodb:27017/local?authSource=admin
+      MONGO_URL: mongodb://admin:${MONGODB_ADMIN_PASSWORD}@mongodb:27017/rocketchat?authSource=admin
+      MONGO_OPLOG_URL: mongodb://admin:${MONGODB_ADMIN_PASSWORD}@mongodb:27017/local?authSource=admin
       DEPLOY_METHOD: docker
       Accounts_UseDNSDomainCheck: false
       ADMIN_USERNAME: admin
