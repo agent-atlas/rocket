@@ -1,8 +1,8 @@
 volumes:
-  - rocketchat-uploads
-  - rocketchat-custom-scripts
-  - traefik-certificates
-  - rocketchat-mongodb
+  rocketchat-uploads:
+  rocketchat-custom-scripts:
+  traefik-certificates:
+  rocketchat-mongodb:
 
 services:
   mongodb:
