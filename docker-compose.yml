@@ -4,11 +4,12 @@ services:
     volumes:
      - ./deploy/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js
      - ./rocketchat-mongodb:/bitnami/mongodb
+    user: "1001:1001"
     environment:
       MONGODB_ENABLE_JOURNAL: true
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: ${MONGODB_ADMIN_PASSWORD}
-      MONGODB_ROOT_PASSWORD: ${MONGODB_ADMIN_PASSWORD}
+      MONGODB_USERNAME: root
+      MONGODB_PASSWORD: ${MONGODB_ADMIN_PASSWORD}
+      MONGODB_DATABASE: rocketchat
     healthcheck:
       test: echo 'db.runCommand("ping").ok' | mongo mongodb:27017/test --quiet
       interval: 10s
