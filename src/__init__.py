@@ -1,1 +1,1 @@
-from adapter import RocketChatApi
+from .adapter import RocketChatApi
