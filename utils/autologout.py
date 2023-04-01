@@ -13,9 +13,10 @@ def main():
     "username": "ivat",
     "password": "Pbvf94",
     "domain": "rocketchat.sitetesting.fun",
+    "ssl_verify": False
 })
-
-    # rocket = RocketChat('ivat', 'Pbvf94', server_url='https://rocketchat.sitetesting.fun', ssl_verify=False)
+# ssl_verify=False
+    # rocket = RocketChat('ivat', 'Pbvf94', server_url='https://rocketchat.sitetesting.fun', )
 
     timeout_minutes = 2
     time_threshold = datetime.now() - timedelta(minutes=timeout_minutes)
