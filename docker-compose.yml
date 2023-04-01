@@ -39,6 +39,10 @@ services:
       # MONGO_OPLOG_URL: mongodb://root:${MONGODB_ADMIN_PASSWORD}@mongodb:27017/local?authSource=admin
       DEPLOY_METHOD: docker
       OVERWRITE_SETTING_Accounts_UseDNSDomainCheck: false
+      OVERWRITE_SETTING_Accounts_LoginExpiration: 120
+      OVERWRITE_SETTING_Default_User_Preferences_enableAutoAway: true
+      OVERWRITE_SETTING_Default_User_Preferences_idleTimeLimit: 120
+      OVERWRITE_SETTING_ForgetUserSessionOnWindowClose: true
       ADMIN_USERNAME: admin
       ADMIN_PASS: ${ADMIN_PASSWORD}
       ADMIN_EMAIL: ${ADMIN_USERNAME}
@@ -46,11 +50,6 @@ services:
       DISABLE_ANONYMOUS_WRITE: true
       SCRIPTS_ALLOWED: login
       SCRIPTS_MESSAGE_ALLOW: login
-      SESSION_LENGTH: 120
-      PLUGIN_DISCORD: https://github.com/RocketChat/discord
-      PLUGIN_IDLE_LOGOUT_TIMEOUT: 120000
-      PLUGIN_IDLE_LOGOUT_EXCEPT: [] # Add exceptions here
-      PLUGIN_IDLE_LOGOUT_ENABLE: true
     healthcheck:
       test: >
          /usr/local/bin/node -e '
@@ -89,7 +88,7 @@ services:
       - "traefik.http.routers.rocketchat.tls.certresolver=letsencrypt"
       - "traefik.http.services.rocketchat.loadbalancer.passhostheader=true"
       - "traefik.http.routers.rocketchat.middlewares=compresstraefik"
-      - "traefik.http.middlewares.compresstraefik.compress=true"
+      - "traefik.http.middlewares.compresstraefik.compress=true"x
     restart: unless-stopped
     depends_on:
       mongodb:
