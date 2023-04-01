@@ -30,7 +30,9 @@ services:
       ROCKETCHAT_USER: admin
       ROCKETCHAT_PASSWORD: ${ADMIN_PASSWORD}
       TIMEOUT: 120
-    restart: always
+#    restart: always
+    restart: unless-stopped
+
 #    command:
 #      - python3 autologout.py
 
