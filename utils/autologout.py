@@ -3,7 +3,7 @@ import requests
 from datetime import datetime, timedelta
 
 def main():
-    rocket = RocketChat('ivat', 'Pbvf94', server_url='https://rocketchat.sitetesting.fun')
+    rocket = RocketChat('ivat', 'Pbvf94', server_url='https://rocketchat.sitetesting.fun', ssl_verify=False)
 
     timeout_minutes = 2
     time_threshold = datetime.now() - timedelta(minutes=timeout_minutes)
