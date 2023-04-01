@@ -53,10 +53,5 @@ def main():
 
 
 if __name__ == 'main':
-    while True:
-        try:
-            print('Start the script')
-            main()
-            time.sleep(60)
-        except Exception as e:
-            print('Error: {}'.format(traceback.format_exc(e)))
+    print('Start the script')
+    main()
