@@ -6,7 +6,7 @@ import time
 from rocketchat_API.APIExceptions.RocketExceptions import RocketConnectionException, RocketAuthenticationException, \
     RocketMissingParamException
 
-from .adapter import RocketChatApi
+from app.adapter import RocketChatApi
 
 
 def main():
