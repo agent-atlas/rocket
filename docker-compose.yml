@@ -22,6 +22,16 @@ services:
       start_period: 60s
     restart: unless-stopped
 
+  rocketchat-logout:
+    build: 
+      context: .
+    environment:
+      ROCKETCHAT_URL: https://rocketchat.sitetesting.fun
+      ROCKETCHAT_USER: admin
+      ROCKETCHAT_PASSWORD: ${ADMIN_PASSWORD}
+      TIMEOUT: 120
+    restart: always
+
   rocketchat:
     image: rocket.chat:5.0
     volumes:
