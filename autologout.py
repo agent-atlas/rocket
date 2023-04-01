@@ -1,4 +1,5 @@
 import hashlib
+import logging
 import traceback
 from datetime import datetime, timedelta
 
@@ -9,6 +10,8 @@ from rocketchat_API.APIExceptions.RocketExceptions import RocketConnectionExcept
 
 from rocketchat_API.rocketchat import RocketChat
 
+
+logging.basicConfig(level=logging.DEBUG)
 
 class RocketChatApi(RocketChat):
     def __init__(self, user=None, password=None, auth_token=None, user_id=None, server_url='http://127.0.0.1:3000',
@@ -53,5 +56,11 @@ def main():
 
 
 if __name__ == '__main__':
-    print('Start the script')
-    main()
+    while True:
+        try:
+            print('Start the script')
+            main()
+            time.sleep(60)
+        except Exception as e:
+            print('Error: {}'.format(traceback.format_exc(e)))
+            time.sleep(60)
