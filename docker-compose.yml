@@ -12,7 +12,6 @@ services:
      - rocketchat-mongodb:/bitnami/mongodb
     environment:
       MONGODB_ENABLE_JOURNAL: true
-      MONGODB_DATABASE: rocketchat
       MONGODB_ROOT_PASSWORD: ${MONGODB_ADMIN_PASSWORD}
       ALLOW_EMPTY_PASSWORD: yes
     healthcheck:
