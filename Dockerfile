@@ -6,6 +6,6 @@ COPY requirements.txt .
 
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY ./utils/autologout.py .
+COPY app/autologout.py .
 
 CMD ["python", "./autologout.py"]
