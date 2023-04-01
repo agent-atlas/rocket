@@ -15,7 +15,10 @@ def main():
         last_status = user['status']
 
         if last_activity_time < time_threshold and last_status != 'online':
-            rocket.logout_user(user['username'])
+            rocket.logout(user['username'])
 
 while True:
-    main()
+    try:
+        main()
+    except Exception as e:
+        print('Error:, {}'.format(e))
