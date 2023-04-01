@@ -51,6 +51,7 @@ services:
       OVERWRITE_SETTING_Accounts_Default_User_Preferences_enableAutoAway: true
       OVERWRITE_SETTING_Accounts_Default_User_Preferences_idleTimeLimit: 120
       OVERWRITE_SETTING_Accounts_ForgetUserSessionOnWindowClose: true
+      OVERWRITE_SETTING_Accounts_TwoFactorAuthenticationEnabled: false
       ADMIN_USERNAME: admin
       ADMIN_PASS: ${ADMIN_PASSWORD}
       ADMIN_EMAIL: ${ADMIN_USERNAME}

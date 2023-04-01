@@ -3,3 +3,4 @@
 ./rocketchat-custom-scripts
 ./traefik-certificates
 .env
+.idea
