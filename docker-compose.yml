@@ -31,6 +31,8 @@ services:
       ROCKETCHAT_PASSWORD: ${ADMIN_PASSWORD}
       TIMEOUT: 120
     restart: always
+    command:
+      - /bin/sh python /app/logout.py
 
   rocketchat:
     image: rocket.chat:5.0
