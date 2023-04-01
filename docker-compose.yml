@@ -32,7 +32,7 @@ services:
       TIMEOUT: 120
     restart: always
     command:
-      - /bin/sh python app/autologout.py
+      - python3 app/autologout.py
 
   rocketchat:
     image: rocket.chat:5.0
