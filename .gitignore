@@ -2,5 +2,5 @@
 ./rocketchat-mongodb
 ./rocketchat-custom-scripts
 ./traefik-certificates
-.env
+env
 .idea
