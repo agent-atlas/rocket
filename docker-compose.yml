@@ -47,7 +47,7 @@ services:
       - rocketchat-custom-scripts:/app/custom_scripts
     environment:
       PORT: 3000
-      ROOT_URL: ${ROOT_URL}
+      ROOT_URL: ${ROCKETCHAT_URL}
       MONGO_URL: ${MONGO_URL}
       DEPLOY_METHOD: docker
       OVERWRITE_SETTING_Accounts_UseDNSDomainCheck: false
