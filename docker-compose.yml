@@ -102,6 +102,9 @@ services:
         condition: service_healthy
     ports:
       - 8080:3000
+    networks:
+      wg-net:
+        - ipv4_address: 10.10.10.2
 
   wg-easy:
     image: weejewel/wg-easy
