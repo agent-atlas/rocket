@@ -5,9 +5,8 @@ volumes:
   rocketchat-mongodb:
 
 networks:
-  default:
-    external:
-      name: wg-net
+  wg-net:
+    external: true
 
 services:
   mongodb:
