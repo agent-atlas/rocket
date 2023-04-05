@@ -4,20 +4,21 @@ volumes:
   traefik-certificates:
   rocketchat-mongodb:
 
-#networks:
-#  vpn_internal:
-#    driver: bridge
-#    ipam:
-#      config:
-#        - subnet: 172.16.0.0/24
-#
-#  host:
-#    external: true
+networks:
+  vpn_internal:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.16.0.0/24
+
+  host:
+    external: true
 
 services:
   mongodb:
-    image: bitnami/mongodb:5.0
+    hostname: mongodb
     container_name: mongodb
+    image: bitnami/mongodb:5.0
     volumes:
      - rocketchat-mongodb:/bitnami/mongodb
     environment:
@@ -47,12 +48,12 @@ services:
     depends_on:
       rocketchat:
         condition: service_healthy
-#    networks:
-#      vpn_internal:
-#        ipv4_address: 172.16.0.5
-#
-#    extra_hosts:
-#      - "rocketchat:172.16.0.2"
+    networks:
+      vpn_internal:
+        ipv4_address: 172.16.0.5
+
+    extra_hosts:
+      - "rocketchat.local:172.16.0.2"
 
   rocketchat:
     image: rocket.chat:5.0
@@ -110,6 +111,11 @@ services:
     labels:
       traefik.enable: true
       traefik.http.routers.rocketchat.rule: Host(`${ROCKETCHAT_HOSTNAME}`)
+      traefik.http.routers.rocketchat.entrypoints: web
+      traefik.http.services.rocketchat.loadbalancer.server.port: 3000
+      traefik.http.routers.rocketchat.tls: false
+      traefik.http.routers.rocketchat.middlewares: rocketchat-headers
+
     restart: unless-stopped
     depends_on:
       mongodb:
@@ -148,8 +154,10 @@ services:
       retries: 3
       start_period: 5s
     restart: unless-stopped
-#    networks:
-#      host:
-#      vpn_internal:
-#        ipv4_address: 172.16.0.2
+    networks:
+      host:
+      vpn_internal:
+        ipv4_address: 172.16.0.2
 
+    extra_hosts:
+      - "rocketchat.local:127.0.0.1"
