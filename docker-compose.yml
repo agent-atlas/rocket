@@ -8,9 +8,10 @@ networks:
   proxy:
     external: true
   wg-internal:
-      ipam:
-        config:
-          - subnet: 10.8.1.0/24
+    internal: true
+    ipam:
+      config:
+        - subnet: 10.8.1.0/24
 
 services:
   mongodb:
@@ -150,7 +151,7 @@ services:
 #    - net.ipv4.conf.all.src_valid_mark=1"
     ports:
     - "51820:51820/udp"
-    - "127.0.0.1:51821:51821/tcp"
+    - "51821:51821/tcp"
     deploy:
       labels:
         io.portainerhack.cap_add: NET_ADMIN,SYS_MODULE
