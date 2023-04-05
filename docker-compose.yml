@@ -11,7 +11,7 @@ networks:
       config:
         - subnet: 172.16.0.0/24
 
-  default:
+  host:
     external: true
 
 services:
@@ -156,4 +156,4 @@ services:
     networks:
       vpn_internal:
         ipv4_address: 172.16.0.2
-      default:
+      host:
