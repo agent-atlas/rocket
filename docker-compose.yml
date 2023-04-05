@@ -119,7 +119,7 @@ services:
     image: weejewel/wg-easy
     container_name: wg-easy
     volumes:
-      - /conf/etc/wireguard:/etc/wireguard
+      - ./conf/etc/wireguard:/etc/wireguard
     environment:
       WG_HOST: 178.172.212.131
       PASSWORD: foobar123
@@ -164,7 +164,7 @@ services:
     container_name: coredns
     restart: unless-stopped
     volumes:
-        - '/conf/etc/coredns:/etc/coredns'
+        - ./conf/etc/coredns:/etc/coredns
     networks:
       proxy:
       wg-internal:
