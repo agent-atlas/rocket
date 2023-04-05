@@ -58,6 +58,7 @@ services:
       OVERWRITE_SETTING_Accounts_ForgetUserSessionOnWindowClose: true
       OVERWRITE_SETTING_Accounts_TwoFactorAuthenticationEnabled: false
       ADMIN_USERNAME: ${ADMIN_USERNAME}
+      ADMIN_NAME: ${ADMIN_USERNAME}
       ADMIN_PASS: ${ADMIN_PASSWORD}
       ADMIN_EMAIL: ${ADMIN_EMAIL}
       DISABLE_ANONYMOUS_READ: true
