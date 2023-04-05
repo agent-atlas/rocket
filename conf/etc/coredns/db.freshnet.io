@@ -1,14 +1,13 @@
+$TTL    1M
 $ORIGIN freshnet.io.
-@	3600 IN	SOA ns.freshnet.io. root.freshnet.io. (
-				2018070500 ; serial
-				7200       ; refresh in seconds (2 hours is 7200)
-				3600       ; retry (1 hour)
-				1209600    ; expire (2 weeks)
-				3600       ; minimum (1 hour)
-				)
 
-	3600 IN NS ns.freshnet.io.
+freshnet.io.		    IN	SOA	sns.dns.icann.org. noc.dns.icann.org. 2015082541 7200 3600 1209600 3600
+freshnet.io.		    IN	NS	b.iana-servers.net.
+freshnet.io.		    IN	NS	a.iana-servers.net.
+freshnet.io.		    IN	A	127.0.0.1
 
-ns IN A 10.8.1.10
-chat  IN A 10.8.1.3
-wireguard IN A 10.8.1.2
+test.freshnet.io.	    IN	A	10.8.1.10
+
+text.freshnet.io.	    IN	TXT	"This is a test text record"
+chat               IN      A       10.8.1.3
+vpn                  IN      A       10.8.1.2
