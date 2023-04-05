@@ -118,8 +118,8 @@ services:
   wg-easy:
     image: weejewel/wg-easy
     container_name: wg-easy
-    volumes:
-      - ./conf/etc/wireguard:/etc/wireguard
+#    volumes:
+#      - ./conf/etc/wireguard:/etc/wireguard
     environment:
       WG_HOST: 178.172.212.131
       PASSWORD: foobar123
