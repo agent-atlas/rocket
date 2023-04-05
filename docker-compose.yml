@@ -32,6 +32,9 @@ services:
       retries: 3
       start_period: 60s
     restart: unless-stopped
+    networks:
+      wg-internal:
+        ipv4_address: 10.8.1.4
 
   rocketchat-logout:
     build: 
@@ -46,6 +49,9 @@ services:
     depends_on:
       rocketchat:
         condition: service_healthy
+    networks:
+      wg-internal:
+        ipv4_address: 10.8.1.5
 
   rocketchat:
     image: rocket.chat:5.0
