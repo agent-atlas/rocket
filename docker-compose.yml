@@ -48,12 +48,12 @@ services:
     depends_on:
       rocketchat:
         condition: service_healthy
-    networks:
-      vpn_internal:
-        ipv4_address: 172.16.0.5
-
-    extra_hosts:
-      - "rocketchat.local:172.16.0.2"
+#    networks:
+#      vpn_internal:
+#        ipv4_address: 172.16.0.5
+#
+#    extra_hosts:
+#      - "rocketchat.local:172.16.0.2"
 
   rocketchat:
     image: rocket.chat:5.0
@@ -108,56 +108,22 @@ services:
       timeout: 5s
       retries: 3
       start_period: 60s
-    labels:
-      traefik.enable: true
-      traefik.http.routers.rocketchat.rule: Host(`${ROCKETCHAT_HOSTNAME}`)
-      traefik.http.routers.rocketchat.entrypoints: web
-      traefik.http.services.rocketchat.loadbalancer.server.port: 3000
-      traefik.http.routers.rocketchat.tls: false
-      traefik.http.routers.rocketchat.middlewares: rocketchat-headers
+#    labels:
+#      traefik.enable: true
+#      traefik.http.routers.rocketchat.rule: Host(`${ROCKETCHAT_HOSTNAME}`)
+#      traefik.http.routers.rocketchat.entrypoints: web
+#      traefik.http.services.rocketchat.loadbalancer.server.port: 3000
+#      traefik.http.routers.rocketchat.tls: false
+#      traefik.http.routers.rocketchat.middlewares: rocketchat-headers
 
     restart: unless-stopped
     depends_on:
       mongodb:
         condition: service_healthy
-      traefik:
-        condition: service_healthy
 
-  traefik:
-    image: traefik:2.8
-    container_name: traefik
-    command:
-      - "--log.level=DEBUG"
-      - "--accesslog=true"
-      - "--api.dashboard=false"
-      - "--api.insecure=true"
-      - "--ping=true"
-      - "--ping.entrypoint=ping"
-      - "--entryPoints.ping.address=:8082"
-      - "--entryPoints.web.address=:80"
-      - "--providers.docker=true"
-      - "--providers.docker.endpoint=unix:///var/run/docker.sock"
-      - "--providers.docker.exposedByDefault=false"
-      - "--metrics.prometheus=true"
-      - "--metrics.prometheus.buckets=0.1,0.3,1.2,5.0"
-      - "--global.checkNewVersion=true"
-      - "--global.sendAnonymousUsage=false"
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - traefik-certificates:/etc/traefik/acme
+  nginx:
+    image: nginx
     ports:
       - "80:80"
-    healthcheck:
-      test: ["CMD", "wget", "http://localhost:8082/ping","--spider"]
-      interval: 10s
-      timeout: 5s
-      retries: 3
-      start_period: 5s
-    restart: unless-stopped
-    networks:
-      host:
-      vpn_internal:
-        ipv4_address: 172.16.0.2
-
-    extra_hosts:
-      - "rocketchat.local:127.0.0.1"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
