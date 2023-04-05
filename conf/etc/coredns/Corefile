@@ -1,4 +1,4 @@
-freshnet.io:53 {
+.freshnet.io.:53 {
     file /etc/coredns/db.freshnet.io
 }
 .:53 {
