@@ -133,7 +133,7 @@ services:
 #        iptables -A INPUT -p udp -m udp --dport 51820 -j ACCEPT;
 #        iptables -A FORWARD -i wg0 -j ACCEPT;
 #        iptables -A FORWARD -o wg0 -j ACCEPT;
-      WG_DEFAULT_DNS: 10.8.1.10
+#      WG_DEFAULT_DNS: 10.8.1.10
       # - WG_MTU=1420
       # - WG_PRE_UP=echo "Pre Up" > /etc/wireguard/pre-up.txt
       # - WG_POST_UP=echo "Post Up" > /etc/wireguard/post-up.txt
@@ -159,13 +159,13 @@ services:
       wg-internal:
         ipv4_address: 10.8.1.2
 
-  coredns:
-    build: ./coredns
-    container_name: coredns
-    restart: unless-stopped
-    volumes:
-        - ./conf/etc/coredns:/etc/coredns
-    networks:
-      proxy:
-      wg-internal:
-        ipv4_address: 10.8.1.10
+#  coredns:
+#    build: ./coredns
+#    container_name: coredns
+#    restart: unless-stopped
+#    volumes:
+#        - ./conf/etc/coredns:/etc/coredns
+#    networks:
+#      proxy:
+#      wg-internal:
+#        ipv4_address: 10.8.1.10
