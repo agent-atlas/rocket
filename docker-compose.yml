@@ -7,13 +7,14 @@ volumes:
 services:
   mongodb:
     image: bitnami/mongodb:5.0
+    platform: linux/amd64
     volumes:
-    #  - ./deploy/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js
      - rocketchat-mongodb:/bitnami/mongodb
     environment:
-      MONGODB_ENABLE_JOURNAL: true
-      # MONGODB_ROOT_PASSWORD: ${MONGODB_ADMIN_PASSWORD}
-      ALLOW_EMPTY_PASSWORD: yes
+      MONGODB_ENABLE_JOURNAL: ${MONGODB_ENABLE_JOURNAL}
+      MONGODB_USERNAME: ${MONGODB_ADMIN_USERNAME}
+      MONGODB_PASSWORD: ${MONGODB_ADMIN_PASSWORD}
+      MONGODB_DATABASE: ${MONGODB_DATABASE}
     healthcheck:
       test: echo 'db.runCommand("ping").ok' | mongo mongodb:27017/test --quiet
       interval: 10s
@@ -25,11 +26,14 @@ services:
   rocketchat-logout:
     build: 
       context: .
+
     environment:
-      ROCKETCHAT_URL: https://rocketchat.sitetesting.fun
-      ROCKETCHAT_USER: admin
-      ROCKETCHAT_PASSWORD: ${ADMIN_PASSWORD}
-      TIMEOUT: 120
+      ROCKETCHAT_URL: ${ROCKETCHAT_URL}
+      ROCKETCHAT_USER: ${ROCKETCHAT_USER}
+      ROCKETCHAT_PASSWORD: ${ROCKETCHAT_PASSWORD}
+      ROCKETCHAT_HOSTNAME: ${ROCKETCHAT_HOSTNAME}
+      LOGOUT_LIMIT: ${LOGOUT_LIMIT}
+      SLEEP_TIME: ${SLEEP_TIME}
     restart: always
     depends_on:
       rocketchat:
@@ -37,17 +41,14 @@ services:
 
   rocketchat:
     image: rocket.chat:5.0
+    platform: linux/amd64
     volumes:
       - rocketchat-uploads:/app/uploads
       - rocketchat-custom-scripts:/app/custom_scripts
     environment:
       PORT: 3000
-      ROOT_URL: https://rocketchat.sitetesting.fun
-      # mongodb://root:1234EWQ@mongodb:27017/rocketchat
-      # MONGO_URL: mongodb://root:${MONGODB_ADMIN_PASSWORD}@mongodb:27017/rocketchat?authSource=admin
-      MONGO_URL: mongodb://mongodb:27017/rocketchat
-      # MONGO_OPLOG_URL: mongodb://root:${MONGODB_ADMIN_PASSWORD}@mongodb:27017/local?authSource=admin
-      # MONGO_OPLOG_URL: mongodb://root:${MONGODB_ADMIN_PASSWORD}@mongodb:27017/local?authSource=admin
+      ROOT_URL: ${ROOT_URL}
+      MONGO_URL: ${MONGO_URL}
       DEPLOY_METHOD: docker
       OVERWRITE_SETTING_Accounts_UseDNSDomainCheck: false
       OVERWRITE_SETTING_Accounts_LoginExpiration: 1
@@ -55,13 +56,11 @@ services:
       OVERWRITE_SETTING_Accounts_Default_User_Preferences_idleTimeLimit: 120
       OVERWRITE_SETTING_Accounts_ForgetUserSessionOnWindowClose: true
       OVERWRITE_SETTING_Accounts_TwoFactorAuthenticationEnabled: false
-      ADMIN_USERNAME: admin
+      ADMIN_USERNAME: ${ADMIN_USERNAME}
       ADMIN_PASS: ${ADMIN_PASSWORD}
-      ADMIN_EMAIL: ${ADMIN_USERNAME}
+      ADMIN_EMAIL: ${ADMIN_EMAIL}
       DISABLE_ANONYMOUS_READ: true
       DISABLE_ANONYMOUS_WRITE: true
-      SCRIPTS_ALLOWED: login
-      SCRIPTS_MESSAGE_ALLOW: login
     healthcheck:
       test: >
          /usr/local/bin/node -e '
@@ -91,13 +90,10 @@ services:
       start_period: 60s
     labels:
       - "traefik.enable=true"
-      # TODO: Move hostname to env
-      - "traefik.http.routers.rocketchat.rule=Host(`rocketchat.sitetesting.fun`)"
+      - "traefik.http.routers.rocketchat.rule=Host(`${ROCKETCHAT_HOSTNAME}`)"
       - "traefik.http.routers.rocketchat.service=rocketchat"
       - "traefik.http.routers.rocketchat.entrypoints=websecure"
-      - "traefik.http.services.rocketchat.loadbalancer.server.port=3000"
-      - "traefik.http.routers.rocketchat.tls=true"
-      - "traefik.http.routers.rocketchat.tls.certresolver=letsencrypt"
+      - "traefik.http.services.rocketchat.loadbalancer.server.port=${PORT}"
       - "traefik.http.services.rocketchat.loadbalancer.passhostheader=true"
       - "traefik.http.routers.rocketchat.middlewares=compresstraefik"
       - "traefik.http.middlewares.compresstraefik.compress=true"
@@ -109,8 +105,8 @@ services:
         condition: service_healthy
 
   traefik:
-    # Image tag (replace with yours)
     image: traefik:2.8
+    platform: linux/amd64
     command:
       - "--log.level=WARN"
       - "--accesslog=true"
@@ -124,10 +120,6 @@ services:
       - "--providers.docker=true"
       - "--providers.docker.endpoint=unix:///var/run/docker.sock"
       - "--providers.docker.exposedByDefault=false"
-      - "--certificatesresolvers.letsencrypt.acme.tlschallenge=true"
-      # Email for Let's Encrypt (replace with yours)
-      - "--certificatesresolvers.letsencrypt.acme.email=2240765vanish@gmail.com"
-      - "--certificatesresolvers.letsencrypt.acme.storage=/etc/traefik/acme/acme.json"
       - "--metrics.prometheus=true"
       - "--metrics.prometheus.buckets=0.1,0.3,1.2,5.0"
       - "--global.checkNewVersion=true"
@@ -146,8 +138,7 @@ services:
       start_period: 5s
     labels:
       - "traefik.enable=true"
-      # Traefik URL (replace with yours)
-      - "traefik.http.routers.dashboard.rule=Host(`traefik.sitetesting.fun`)"
+      - "traefik.http.routers.dashboard.rule=Host(`${ROCKETCHAT_HOSTNAME}`)"
       - "traefik.http.routers.dashboard.service=api@internal"
       - "traefik.http.routers.dashboard.entrypoints=websecure"
       - "traefik.http.services.dashboard.loadbalancer.server.port=8080"
@@ -155,10 +146,6 @@ services:
       - "traefik.http.routers.dashboard.tls.certresolver=letsencrypt"
       - "traefik.http.services.dashboard.loadbalancer.passhostheader=true"
       - "traefik.http.routers.dashboard.middlewares=authtraefik"
-      # Basic Authentication for Traefik Dashboard
-      # Username: traefikadmin (replace with yours)
-      # Passwords must be encoded using MD5, SHA1, or BCrypt https://hostingcanada.org/htpasswd-generator/
-      - "traefik.http.middlewares.authtraefik.basicauth.users=ivat:$$2y$$10$$GnKwYLz8FoHK2MhhiEhGVOMqJ96JfBDPrNJCP9BX9gLWqumssSn/y"
       - "traefik.http.routers.http-catchall.rule=HostRegexp(`{host:.+}`)"
       - "traefik.http.routers.http-catchall.entrypoints=web"
       - "traefik.http.routers.http-catchall.middlewares=redirect-to-https"
