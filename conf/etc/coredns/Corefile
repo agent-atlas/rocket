@@ -1,5 +1,5 @@
 freshnet.io:53 {
-    whoami
+    file /etc/coredns/db.freshnet.io
 }
 .:53 {
     log stdout
@@ -10,5 +10,5 @@ freshnet.io:53 {
 }
 
 10.8.1.0/24 {
-    whoami
+    file /etc/coredns/db.freshnet.io
 }
