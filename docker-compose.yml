@@ -156,7 +156,7 @@ services:
         io.portainerhack.cap_add: NET_ADMIN,SYS_MODULE
     networks:
       proxy:
-        ipv4_address: 10.8.0.1
+        ipv4_address: 10.8.0.2
       wg-internal:
         ipv4_address: 10.8.1.2
 
