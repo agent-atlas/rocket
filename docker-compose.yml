@@ -36,7 +36,7 @@ services:
 
   rocketchat-logout:
     build: 
-      context: .
+      context: ./logout
     environment:
       ROCKETCHAT_URL: ${ROCKETCHAT_URL}
       ROCKETCHAT_USER: ${ROCKETCHAT_USER}
@@ -47,6 +47,12 @@ services:
     depends_on:
       rocketchat:
         condition: service_healthy
+    networks:
+      vpn_internal:
+        ipv4_address: 172.16.0.5
+
+    extra_hosts:
+      - "rocketchat:172.16.0.2"
 
   rocketchat:
     image: rocket.chat:5.0
