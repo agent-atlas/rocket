@@ -7,7 +7,7 @@ volumes:
 services:
   mongodb:
     image: bitnami/mongodb:5.0
-    platform: linux/amd64
+    container_name: mongodb
     volumes:
      - rocketchat-mongodb:/bitnami/mongodb
     environment:
@@ -27,12 +27,10 @@ services:
   rocketchat-logout:
     build: 
       context: .
-
     environment:
       ROCKETCHAT_URL: ${ROCKETCHAT_URL}
       ROCKETCHAT_USER: ${ROCKETCHAT_USER}
       ROCKETCHAT_PASSWORD: ${ROCKETCHAT_PASSWORD}
-      ROCKETCHAT_HOSTNAME: ${ROCKETCHAT_HOSTNAME}
       LOGOUT_LIMIT: ${LOGOUT_LIMIT}
       SLEEP_TIME: ${SLEEP_TIME}
     restart: always
@@ -42,7 +40,7 @@ services:
 
   rocketchat:
     image: rocket.chat:5.0
-    platform: linux/amd64
+    container_name: rocketchat
     volumes:
       - rocketchat-uploads:/app/uploads
       - rocketchat-custom-scripts:/app/custom_scripts
@@ -52,7 +50,7 @@ services:
       MONGO_URL: ${MONGO_URL}
       MONGO_OPLOG_URL: ${MONGO_OPLOG_URL}
       DEPLOY_METHOD: docker
-      OVERWRITE_SETTING_Accounts_UseDNSDomainCheck: false
+      Accounts_UseDNSDomainCheck: 'false'
       OVERWRITE_SETTING_Accounts_LoginExpiration: 1
       OVERWRITE_SETTING_Accounts_Default_User_Preferences_enableAutoAway: true
       OVERWRITE_SETTING_Accounts_Default_User_Preferences_idleTimeLimit: 120
@@ -95,7 +93,7 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.rocketchat.rule=Host(`${ROCKETCHAT_HOSTNAME}`)"
       - "traefik.http.routers.rocketchat.service=rocketchat"
-      - "traefik.http.routers.rocketchat.entrypoints=http"
+      - "traefik.http.routers.rocketchat.entrypoints=websecure"
       - "traefik.http.services.rocketchat.loadbalancer.server.port=${ROCKETCHAT_PORT}"
       - "traefik.http.services.rocketchat.loadbalancer.passhostheader=true"
       - "traefik.http.routers.rocketchat.middlewares=compresstraefik"
@@ -106,14 +104,17 @@ services:
         condition: service_healthy
       traefik:
         condition: service_healthy
+    networks:
+      default:
+        - ipv4_address: 10.5.1.3
 
   traefik:
     image: traefik:2.8
-    platform: linux/amd64
+    container_name: traefik
     command:
       - "--log.level=WARN"
       - "--accesslog=true"
-      - "--api.dashboard=true"
+      - "--api.dashboard=false"
       - "--api.insecure=true"
       - "--ping=true"
       - "--ping.entrypoint=ping"
@@ -151,6 +152,17 @@ services:
 #      - "traefik.http.routers.dashboard.middlewares=authtraefik"
       - "traefik.http.routers.http-catchall.rule=HostRegexp(`{host:.+}`)"
       - "traefik.http.routers.http-catchall.entrypoints=web"
-#      - "traefik.http.routers.http-catchall.middlewares=redirect-to-https"
-#      - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
+      - "traefik.http.routers.http-catchall.middlewares=redirect-to-https"
+      - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
     restart: unless-stopped
+    networks:
+      default:
+        - ipv4_address: 10.5.1.3
+
+networks:
+    default:
+      driver: bridge
+      ipam:
+        config:
+            - subnet: 10.5.1.0/24
+              gateway: 10.5.1.1
