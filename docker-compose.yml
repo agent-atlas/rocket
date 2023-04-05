@@ -123,17 +123,17 @@ services:
     environment:
       WG_HOST: 178.172.212.131
       PASSWORD: foobar123
-      WG_PORT: 51820
-      WG_DEFAULT_ADDRESS: 10.8.0.x
+#      WG_PORT: 51820
+#      WG_DEFAULT_ADDRESS: 10.8.0.x
       WG_ALLOWED_IPS: 10.8.0.0/24,10.8.1.0/24
-      WG_PRE_UP: >
-        iptables -t nat -A POSTROUTING -d 10.8.1.0/24 -j MASQUERADE
+#      WG_PRE_UP: >
+#        iptables -t nat -A POSTROUTING -d 10.8.1.0/24 -j MASQUERADE
 #      WG_POST_UP: >
 #        iptables -t nat -A POSTROUTING -s 10.8.0.0/24 -o eth1 -j MASQUERADE;
 #        iptables -A INPUT -p udp -m udp --dport 51820 -j ACCEPT;
 #        iptables -A FORWARD -i wg0 -j ACCEPT;
 #        iptables -A FORWARD -o wg0 -j ACCEPT;
-      WG_DEFAULT_DNS: 10.8.1.10
+#      WG_DEFAULT_DNS: 10.8.1.10
       # - WG_MTU=1420
       # - WG_PRE_UP=echo "Pre Up" > /etc/wireguard/pre-up.txt
       # - WG_POST_UP=echo "Post Up" > /etc/wireguard/post-up.txt
@@ -156,11 +156,12 @@ services:
         io.portainerhack.cap_add: NET_ADMIN,SYS_MODULE
     networks:
       proxy:
+        ipv4_address: 10.8.0.1
       wg-internal:
         ipv4_address: 10.8.1.2
 
   coredns:
-    build: ./coredns
+    image: coredns/coredns:latest
     container_name: coredns
     restart: unless-stopped
     volumes:
