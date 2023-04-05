@@ -5,14 +5,9 @@ volumes:
   rocketchat-mongodb:
 
 networks:
-  vpn_internal:
-    driver: bridge
-    ipam:
-      config:
-        - subnet: 172.16.0.0/24
-
-  host:
-    external: true
+  default:
+    external:
+      name: wg-net
 
 services:
   mongodb:
@@ -48,12 +43,6 @@ services:
     depends_on:
       rocketchat:
         condition: service_healthy
-    networks:
-      vpn_internal:
-        ipv4_address: 172.16.0.5
-
-    extra_hosts:
-      - "rocketchat.local:172.16.0.2"
 
   rocketchat:
     image: rocket.chat:5.0
@@ -108,56 +97,38 @@ services:
       timeout: 5s
       retries: 3
       start_period: 60s
-    labels:
-      traefik.enable: true
-      traefik.http.routers.rocketchat.rule: Host(`${ROCKETCHAT_HOSTNAME}`)
-      traefik.http.routers.rocketchat.entrypoints: web
-      traefik.http.services.rocketchat.loadbalancer.server.port: 3000
-      traefik.http.routers.rocketchat.tls: false
-      traefik.http.routers.rocketchat.middlewares: rocketchat-headers
-
     restart: unless-stopped
     depends_on:
       mongodb:
         condition: service_healthy
-      traefik:
-        condition: service_healthy
-
-  traefik:
-    image: traefik:2.8
-    container_name: traefik
-    command:
-      - "--log.level=DEBUG"
-      - "--accesslog=true"
-      - "--api.dashboard=false"
-      - "--api.insecure=true"
-      - "--ping=true"
-      - "--ping.entrypoint=ping"
-      - "--entryPoints.ping.address=:8082"
-      - "--entryPoints.web.address=:80"
-      - "--providers.docker=true"
-      - "--providers.docker.endpoint=unix:///var/run/docker.sock"
-      - "--providers.docker.exposedByDefault=false"
-      - "--metrics.prometheus=true"
-      - "--metrics.prometheus.buckets=0.1,0.3,1.2,5.0"
-      - "--global.checkNewVersion=true"
-      - "--global.sendAnonymousUsage=false"
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - traefik-certificates:/etc/traefik/acme
     ports:
-      - "80:80"
-    healthcheck:
-      test: ["CMD", "wget", "http://localhost:8082/ping","--spider"]
-      interval: 10s
-      timeout: 5s
-      retries: 3
-      start_period: 5s
-    restart: unless-stopped
-    networks:
-      host:
-      vpn_internal:
-        ipv4_address: 172.16.0.2
+      - 80:3000
 
-    extra_hosts:
-      - "rocketchat.local:127.0.0.1"
+  wg-easy:
+    environment:
+      WG_HOST: 178.172.212.131
+      # Optional:
+      # - PASSWORD=foobar123
+#      WG_PORT:51820
+      WG_DEFAULT_ADDRESS: 10.10.10.1
+      WG_DEFAULT_DNS: 1.1.1.1
+      # - WG_MTU=1420
+      # - WG_ALLOWED_IPS=192.168.15.0/24, 10.0.1.0/24
+      # - WG_PRE_UP=echo "Pre Up" > /etc/wireguard/pre-up.txt
+      # - WG_POST_UP=echo "Post Up" > /etc/wireguard/post-up.txt
+      # - WG_PRE_DOWN=echo "Pre Down" > /etc/wireguard/pre-down.txt
+      # - WG_POST_DOWN=echo "Post Doports:
+        #      - "51820:51820/udp"
+        #      - "51821:51821/tcp"
+        #    restart: unless-stopped
+        #    cap_add:10.10.10.1
+        #      - NET_ADMIN
+        #      - SYS_MODULE
+        #    sysctls:
+      #      - net.ipv4.ip_forward=1
+      #      - net.ipv4.conf.all.src_valid_mark=1wn" > /etc/wireguard/post-down.txt
+
+    image: weejewel/wg-easy
+    container_name: wg-easy
+    volumes:
+      - /deploy/etc/wireguard:/etc/wireguard
