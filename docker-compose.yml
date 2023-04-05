@@ -160,18 +160,12 @@ services:
         ipv4_address: 10.8.1.2
 
   coredns:
-        build: ./coredns
-        container_name: coredns
-        restart: unless-stopped
-        expose:
-            - '53'
-            - '53/udp'
-        ports:
-            - '53:53'
-            - '53:53/udp'
-        volumes:
-            - '/etc/coredns:/etc/coredns'
-        networks:
-          proxy:
-          wg-internal:
-            ipv4_address: 10.8.1.10
+    build: ./coredns
+    container_name: coredns
+    restart: unless-stopped
+    volumes:
+        - '/etc/coredns:/etc/coredns'
+    networks:
+      proxy:
+      wg-internal:
+        ipv4_address: 10.8.1.10
