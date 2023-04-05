@@ -109,7 +109,7 @@ services:
       start_period: 60s
     labels:
       traefik.enable: true
-      traefik.http.routers.rocketchat.rule: Host(`${ROCKETCHAT_HOST}`)
+      traefik.http.routers.rocketchat.rule: Host(`${ROCKETCHAT_HOSTNAME}`)
     restart: unless-stopped
     depends_on:
       mongodb:
