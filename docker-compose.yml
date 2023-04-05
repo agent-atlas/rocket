@@ -4,15 +4,15 @@ volumes:
   traefik-certificates:
   rocketchat-mongodb:
 
-networks:
-  vpn_internal:
-    driver: bridge
-    ipam:
-      config:
-        - subnet: 172.16.0.0/24
-
-  host:
-    external: true
+#networks:
+#  vpn_internal:
+#    driver: bridge
+#    ipam:
+#      config:
+#        - subnet: 172.16.0.0/24
+#
+#  host:
+#    external: true
 
 services:
   mongodb:
@@ -47,12 +47,12 @@ services:
     depends_on:
       rocketchat:
         condition: service_healthy
-    networks:
-      vpn_internal:
-        ipv4_address: 172.16.0.5
-
-    extra_hosts:
-      - "rocketchat:172.16.0.2"
+#    networks:
+#      vpn_internal:
+#        ipv4_address: 172.16.0.5
+#
+#    extra_hosts:
+#      - "rocketchat:172.16.0.2"
 
   rocketchat:
     image: rocket.chat:5.0
@@ -148,6 +148,8 @@ services:
       retries: 3
       start_period: 5s
     restart: unless-stopped
-    networks:
-      vpn_internal:
-        ipv4_address: 172.16.0.2
+#    networks:
+#      host:
+#      vpn_internal:
+#        ipv4_address: 172.16.0.2
+
