@@ -21,6 +21,12 @@ services:
     volumes:
      - rocketchat-mongodb:/bitnami/mongodb
     environment:
+      MONGODB_REPLICA_SET_MODE: primary
+      MONGODB_REPLICA_SET_NAME: rs0
+      MONGODB_PORT_NUMBER: 27017
+      MONGODB_INITIAL_PRIMARY_HOST: mongodb
+      MONGODB_INITIAL_PRIMARY_PORT_NUMBER: 27017
+      MONGODB_ADVERTISED_HOSTNAME: mongodb
       MONGODB_ENABLE_JOURNAL: ${MONGODB_ENABLE_JOURNAL}
       MONGODB_USERNAME: ${MONGODB_ADMIN_USERNAME}
       MONGODB_PASSWORD: ${MONGODB_ADMIN_PASSWORD}
@@ -68,8 +74,8 @@ services:
     environment:
       PORT: ${ROCKETCHAT_PORT}
       ROOT_URL: ${ROCKETCHAT_URL}
-      MONGO_URL: ${MONGO_URL}
-      MONGO_OPLOG_URL: ${MONGO_OPLOG_URL}
+      MONGO_URL: ${MONGO_URL}?replicaSet=rs0
+      MONGO_OPLOG_URL: ${MONGO_OPLOG_URL}?replicaSet=rs0
       DEPLOY_METHOD: docker
 #      Test 2 params
       Accounts_UseDNSDomainCheck: 'false'
@@ -96,7 +102,7 @@ services:
          const http = require("http");
          const options = {
            host: "localhost",
-           port: 80,
+           port: ${ROCKETCHAT_PORT}
            path: "/api/info",
            timeout: 2000
          };
@@ -134,7 +140,7 @@ services:
 #    volumes:
 #      - ./conf/etc/wireguard:/etc/wireguard
     environment:
-      WG_HOST: 178.172.212.131
+      WG_HOST: ${WG_HOST_OR_IP}
       PASSWORD: foobar123
       WG_PORT: 51820
       WG_DEFAULT_ADDRESS: 10.10.10.x
@@ -185,3 +191,16 @@ services:
     networks:
       wg-internal:
         ipv4_address: 10.8.1.10
+
+  traefik:
+    image: docker.io/traefik:latest
+    restart: unless-stopped
+    command:
+      - --api.insecure=false
+      - --providers.docker=true
+      - --providers.docker.exposedbydefault=false
+      - --entrypoints.http.address=:${ROCKETCHAT_PORT}
+    ports:
+      - 80:${ROCKETCHAT_PORT}
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
