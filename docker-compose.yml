@@ -76,8 +76,8 @@ services:
       ROOT_URL: ${ROCKETCHAT_URL}
 #      MONGO_URL: ${MONGO_URL}?replicaSet=rs0
 #      MONGO_OPLOG_URL: ${MONGO_OPLOG_URL}?replicaSet=rs0
-      MONGO_URL: mongodb://mongodb:27017/rocketchat?replicaSet=rs0
-      MONGO_OPLOG_URL: mongodb://mongodb:27017/local?replicaSet=rs0
+      MONGO_URL: mongodb://db.freshnet.io:27017/rocketchat?replicaSet=rs0
+      MONGO_OPLOG_URL: mongodb://db.freshnet.io:27017/local?replicaSet=rs0
       DEPLOY_METHOD: docker
 #      Test 2 params
       Accounts_UseDNSDomainCheck: 'false'
@@ -127,7 +127,6 @@ services:
     networks:
       wg-internal:
         ipv4_address: 10.8.1.3
-
     dns:
       - 10.8.1.10
 
