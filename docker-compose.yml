@@ -164,8 +164,9 @@ services:
     image: coredns/coredns:latest
     container_name: coredns
     restart: unless-stopped
-#    volumes:
-#        - ./conf/etc/coredns:/etc/coredns
+    volumes:
+        - ./conf/etc/coredns:/etc/coredns
+    command: "-conf /etc/coredns/corefile"
     networks:
       wg-internal:
         ipv4_address: 10.8.1.10

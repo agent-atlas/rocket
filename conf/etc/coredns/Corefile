@@ -1,14 +1,20 @@
-.freshnet.io.:53 {
-    file /etc/coredns/db.freshnet.io
-}
-.:53 {
-    log stdout
+. {
+    log
     errors
-    auto
-    cache 30
+    health
     forward . 8.8.8.8:53
 }
 
-10.8.1.0/24 {
+freshnet.io.:53 {
+    log
+    errors
+    health
+    file /etc/coredns/db.freshnet.io
+}
+
+in-addr.arpa.:53 {
+    log
+    errors
+    health
     file /etc/coredns/db.freshnet.io
 }
