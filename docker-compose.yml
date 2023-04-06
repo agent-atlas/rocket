@@ -187,9 +187,9 @@ services:
     volumes:
         - ./conf/etc/coredns:/etc/coredns
     command: "-conf /etc/coredns/Corefile"
-    networks:
-      wg-internal:
-        ipv4_address: 10.8.1.10
+#    networks:
+#      wg-internal:
+#        ipv4_address: 10.8.1.10
 
   nginx:
     container_name: nginx
