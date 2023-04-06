@@ -201,8 +201,8 @@ services:
       - ROCKETCHAT_HOSTNAME=${ROCKETCHAT_HOSTNAME}
     depends_on:
       - rocketchat
-#    volumes:
-#      - ./conf/etc/nginx/templates:/etc/nginx/templates:ro
+    volumes:
+      - ./conf/etc/nginx/templates:/etc/nginx/templates:ro
     networks:
       wg-internal:
         ipv4_address: 10.8.1.6
