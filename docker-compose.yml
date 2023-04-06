@@ -199,7 +199,8 @@ services:
       - rocketchat
     volumes:
       - ./conf/etc/nginx/templates:/etc/nginx/templates:ro
-
     networks:
       wg-internal:
         ipv4_address: 10.8.1.6
+    dns:
+      - 10.8.1.10
