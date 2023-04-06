@@ -140,9 +140,9 @@ services:
       WG_DEFAULT_DNS: 10.8.1.10
 
       WG_POST_UP: >
-        iptables -A FORWARD -i wg0 -o eth1 -j ACCEPT
-        iptables -A FORWARD -i eth1 -o wg0 -m state --state RELATED,ESTABLISHED -j ACCEPT
-        iptables -t nat -A POSTROUTING -o eth1 -j MASQUERADE
+        iptables -A FORWARD -i wg0 -o eth1 -j ACCEPT;
+        iptables -A FORWARD -i eth1 -o wg0 -m state --state RELATED,ESTABLISHED -j ACCEPT;
+        iptables -t nat -A POSTROUTING -o eth1 -j MASQUERADE;
       # - WG_MTU=1420
       # - WG_PRE_UP=echo "Pre Up" > /etc/wireguard/pre-up.txt
       # - WG_POST_UP=echo "Post Up" > /etc/wireguard/post-up.txt
