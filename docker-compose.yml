@@ -74,8 +74,10 @@ services:
     environment:
       PORT: ${ROCKETCHAT_PORT}
       ROOT_URL: ${ROCKETCHAT_URL}
-      MONGO_URL: ${MONGO_URL}?replicaSet=rs0
-      MONGO_OPLOG_URL: ${MONGO_OPLOG_URL}?replicaSet=rs0
+#      MONGO_URL: ${MONGO_URL}?replicaSet=rs0
+#      MONGO_OPLOG_URL: ${MONGO_OPLOG_URL}?replicaSet=rs0
+      MONGO_URL: mongodb://mongodb:27017/rocketchat?replicaSet=rs0
+      MONGO_OPLOG_URL: mongodb://mongodb:27017/local?replicaSet=rs0
       DEPLOY_METHOD: docker
 #      Test 2 params
       Accounts_UseDNSDomainCheck: 'false'
