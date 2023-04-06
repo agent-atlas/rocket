@@ -4,14 +4,14 @@ volumes:
   traefik-certificates:
   rocketchat-mongodb:
 
-networks:
-  proxy:
-    external: true
-  wg-internal:
-    internal: true
-    ipam:
-      config:
-        - subnet: 10.8.1.0/24
+#networks:
+#  proxy:
+#    external: true
+#  wg-internal:
+#    internal: true
+#    ipam:
+#      config:
+#        - subnet: 10.8.1.0/24
 
 services:
   mongodb:
@@ -39,11 +39,11 @@ services:
       retries: 3
       start_period: 60s
     restart: unless-stopped
-    networks:
-      wg-internal:
-        ipv4_address: 10.8.1.4
-    dns:
-      - 10.8.1.10
+#    networks:
+#      wg-internal:
+#        ipv4_address: 10.8.1.4
+#    dns:
+#      - 10.8.1.10
 
   rocketchat-logout:
     build: 
@@ -58,12 +58,12 @@ services:
     depends_on:
       rocketchat:
         condition: service_healthy
-    networks:
-      wg-internal:
-        ipv4_address: 10.8.1.5
-
-    dns:
-      - 10.8.1.10
+#    networks:
+#      wg-internal:
+#        ipv4_address: 10.8.1.5
+#
+#    dns:
+#      - 10.8.1.10
 
   rocketchat:
     image: rocket.chat:5.0
@@ -73,7 +73,7 @@ services:
       - rocketchat-custom-scripts:/app/custom_scripts
     environment:
       PORT: ${ROCKETCHAT_PORT}
-      ROOT_URL: ${ROCKETCHAT_URL}:${ROCKETCHAT_PORT}
+      ROOT_URL: http://79.137.248.164:3000
 #      MONGO_URL: ${MONGO_URL}?replicaSet=rs0
 #      MONGO_OPLOG_URL: ${MONGO_OPLOG_URL}?replicaSet=rs0
       MONGO_URL: mongodb://mongodb:27017/rocketchat?replicaSet=rs0
@@ -124,12 +124,12 @@ services:
     depends_on:
       mongodb:
         condition: service_healthy
-    networks:
-      wg-internal:
-        ipv4_address: 10.8.1.3
-
-    dns:
-      - 10.8.1.10
+#    networks:
+#      wg-internal:
+#        ipv4_address: 10.8.1.3
+#
+#    dns:
+#      - 10.8.1.10
 
   wg-easy:
     image: weejewel/wg-easy
@@ -140,18 +140,18 @@ services:
       WG_HOST: ${WG_HOST_OR_IP}
       PASSWORD: foobar123
 #      WG_PORT: 51820
-      WG_DEFAULT_ADDRESS: 10.10.10.x
-      WG_ALLOWED_IPS: 10.10.10.0/24,10.8.0.0/24,10.8.1.0/24
-      WG_PRE_UP: >
-        iptables -t nat -A POSTROUTING -d 10.8.1.0/24 -j MASQUERADE
+#      WG_DEFAULT_ADDRESS: 10.10.10.x
+#      WG_ALLOWED_IPS: 10.10.10.0/24,10.8.0.0/24,10.8.1.0/24
+#      WG_PRE_UP: >
+#        iptables -t nat -A POSTROUTING -d 10.8.1.0/24 -j MASQUERADE
       WG_PERSISTENT_KEEPALIVE: 600
-      WG_DEFAULT_DNS: 10.8.1.10
-      WG_POST_UP: >
-        iptables -t nat -A POSTROUTING -d 10.8.1.0/24 -j MASQUERADE;
-        iptables -t nat -A POSTROUTING -s 10.8.1.0/24 -j MASQUERADE;
-        iptables -A INPUT -p udp -m udp --dport 51820 -j ACCEPT;
-        iptables -A FORWARD -i wg0 -j ACCEPT;
-        iptables -A FORWARD -o wg0 -j ACCEPT;
+#      WG_DEFAULT_DNS: 10.8.1.10
+#      WG_POST_UP: >
+#        iptables -t nat -A POSTROUTING -d 10.8.1.0/24 -j MASQUERADE;
+#        iptables -t nat -A POSTROUTING -s 10.8.1.0/24 -j MASQUERADE;
+#        iptables -A INPUT -p udp -m udp --dport 51820 -j ACCEPT;
+#        iptables -A FORWARD -i wg0 -j ACCEPT;
+#        iptables -A FORWARD -o wg0 -j ACCEPT;
 #      WG_POST_UP: >
 #        iptables -A FORWARD -i wg0 -s 10.8.1.0/24 -j ACCEPT;
 #        iptables -t nat -A POSTROUTING -s 10.8.1.0/24 -o wg0 -j MASQUERADE;
@@ -174,11 +174,11 @@ services:
     deploy:
       labels:
         io.portainerhack.cap_add: NET_ADMIN,SYS_MODULE
-    networks:
-      proxy:
-        ipv4_address: 10.8.0.2
-      wg-internal:
-        ipv4_address: 10.8.1.2
+#    networks:
+#      proxy:
+#        ipv4_address: 10.8.0.2
+#      wg-internal:
+#        ipv4_address: 10.8.1.2
 
   coredns:
     image: coredns/coredns:latest
@@ -201,10 +201,10 @@ services:
       - ROCKETCHAT_HOSTNAME=${ROCKETCHAT_HOSTNAME}
     depends_on:
       - rocketchat
-    volumes:
-      - ./conf/etc/nginx/templates:/etc/nginx/templates:ro
-    networks:
-      wg-internal:
-        ipv4_address: 10.8.1.6
-    dns:
-      - 10.8.1.10
+#    volumes:
+#      - ./conf/etc/nginx/templates:/etc/nginx/templates:ro
+#    networks:
+#      wg-internal:
+#        ipv4_address: 10.8.1.6
+#    dns:
+#      - 10.8.1.10
