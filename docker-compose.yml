@@ -99,7 +99,7 @@ services:
          const http = require("http");
          const options = {
            host: "localhost",
-           port: ${ROCKETCHAT_PORT}
+           port: ${ROCKETCHAT_PORT},
            path: "/api/info",
            timeout: 2000
          };
