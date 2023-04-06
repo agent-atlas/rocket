@@ -187,7 +187,7 @@ services:
       wg-internal:
         ipv4_address: 10.8.1.10
 
-nginx:
+  nginx:
     container_name: nginx
     image: nginx:latest
     restart: unless-stopped
