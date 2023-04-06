@@ -2,6 +2,7 @@ freshnet.io.              IN  SOA   dns.freshnet.io. admin.freshnet.io. 16753038
 in-addr.arpa.               IN  SOA   dns.freshnet.io. admin.freshnet.io. 1675303881 7200 3600 1209600 3600
 
 dns.freshnet.io.          IN  A     10.8.1.10
+chat-backend.freshnet.io.         IN  A     10.8.1.3
 chat.freshnet.io.         IN  A     10.8.1.6
 
 

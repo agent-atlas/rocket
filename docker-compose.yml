@@ -93,14 +93,6 @@ services:
 #      ADMIN_EMAIL: ${ADMIN_EMAIL}
       DISABLE_ANONYMOUS_READ: true
       DISABLE_ANONYMOUS_WRITE: true
-    labels:
-      - "traefik.enable=true"
-      - "traefik.docker.network=wg-interal"
-      - "traefik.http.routers.rocketchat.rule=Host(`${ROCKETCHAT_HOSTNAME}`)"
-      - "traefik.http.routers.rocketchat.tls=true"
-      - "traefik.http.routers.rocketchat.tls.certresolver=default"
-      - "traefik.http.routers.rocketchat.entrypoints=websecure"
-      - "traefik.http.services.rocketchat.loadbalancer.server.port=3000"
     healthcheck:
       test: >
          /usr/local/bin/node -e '
@@ -195,18 +187,19 @@ services:
       wg-internal:
         ipv4_address: 10.8.1.10
 
-  traefik:
-    image: docker.io/traefik:latest
+nginx:
+    container_name: nginx
+    image: nginx:latest
     restart: unless-stopped
-    command:
-      - --api.insecure=false
-      - --providers.docker=true
-      - --providers.docker.exposedbydefault=false
-      - --entrypoints.http.address=:${ROCKETCHAT_PORT}
-#    ports:
-#      - 80:${ROCKETCHAT_PORT}
+    environment:
+      - ROCKETCHAT_UPSTREAM=${ROCKETCHAT_HOSTNAME}:${ROCKETCHAT_PORT}
+      - NGINX_PORT=80
+      - ROCKETCHAT_HOSTNAME=${ROCKETCHAT_HOSTNAME}
+    depends_on:
+      - rocketchat
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./etc/nginx/templates:/etc/nginx/templates:ro
+
     networks:
       wg-internal:
         ipv4_address: 10.8.1.6
