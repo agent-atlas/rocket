@@ -198,7 +198,7 @@ services:
     depends_on:
       - rocketchat
     volumes:
-      - ./etc/nginx/templates:/etc/nginx/templates:ro
+      - ./conf/etc/nginx/templates:/etc/nginx/templates:ro
 
     networks:
       wg-internal:
