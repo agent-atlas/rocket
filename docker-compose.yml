@@ -85,6 +85,11 @@ services:
 #      ADMIN_EMAIL: ${ADMIN_EMAIL}
       DISABLE_ANONYMOUS_READ: true
       DISABLE_ANONYMOUS_WRITE: true
+    labels:
+      traefik.enable: "true"
+      traefik.http.routers.rocketchat.rule: Host(`${ROCKETCHAT_HOSTNAME}`)
+      traefik.http.routers.rocketchat.tls: "false"
+      traefik.http.routers.rocketchat.entrypoints: http
     healthcheck:
       test: >
          /usr/local/bin/node -e '
