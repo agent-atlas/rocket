@@ -60,7 +60,7 @@ services:
       - 10.8.1.10
 
   rocketchat:
-    image: rocket.chat:5
+    image: rocket.chat:5.0
     container_name: ${ROCKETCHAT_HOSTNAME}
     volumes:
       - rocketchat-uploads:/app/uploads
