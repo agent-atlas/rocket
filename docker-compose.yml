@@ -21,11 +21,14 @@ services:
     volumes:
      - rocketchat-mongodb:/bitnami/mongodb
     environment:
-      MONGODB_ENABLE_JOURNAL: ${MONGODB_ENABLE_JOURNAL}
-      MONGODB_USERNAME: ${MONGODB_ADMIN_USERNAME}
-      MONGODB_PASSWORD: ${MONGODB_ADMIN_PASSWORD}
-      MONGODB_DATABASE: ${MONGODB_DATABASE}
-      MONGODB_ROOT_PASSWORD: ${MONGODB_ADMIN_PASSWORD}
+      MONGODB_REPLICA_SET_MODE: primary
+      MONGODB_REPLICA_SET_NAME: rs0
+      MONGODB_PORT_NUMBER: 27017
+      MONGODB_INITIAL_PRIMARY_HOST: mongodb
+      MONGODB_INITIAL_PRIMARY_PORT_NUMBER: 27017
+      MONGODB_ADVERTISED_HOSTNAME: mongodb
+      MONGODB_ENABLE_JOURNAL: 'true'
+      ALLOW_EMPTY_PASSWORD: yes
     healthcheck:
       test: echo 'db.runCommand("ping").ok' | mongo mongodb:27017/test --quiet
       interval: 10s
@@ -68,8 +71,8 @@ services:
     environment:
       PORT: ${ROCKETCHAT_PORT}
       ROOT_URL: ${ROCKETCHAT_URL}
-      MONGO_URL: ${MONGO_URL}
-      MONGO_OPLOG_URL: ${MONGO_OPLOG_URL}
+      MONGO_URL: mongodb://mongodb:27017/rocketchat?replicaSet=rs0
+      MONGO_OPLOG_URL: mongodb://mongodb:27017/local?replicaSet=rs0
       DEPLOY_METHOD: docker
 #      Test 2 params
       Accounts_UseDNSDomainCheck: 'false'
