@@ -186,7 +186,7 @@ services:
     restart: unless-stopped
     environment:
       - ROCKETCHAT_UPSTREAM=${ROCKETCHAT_BACKEND_HOSTNAME}:${ROCKETCHAT_PORT}
-      - NGINX_PORT=80
+      - NGINX_PORT=81
       - ROCKETCHAT_HOSTNAME=${ROCKETCHAT_HOSTNAME}
     depends_on:
       - rocketchat
