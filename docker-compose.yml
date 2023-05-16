@@ -179,3 +179,16 @@ services:
       proxy:
       wg-internal:
         ipv4_address: 10.8.1.10
+
+  nginx:
+    container_name: nginx
+    image: nginx:latest
+    restart: unless-stopped
+    environment:
+      - ROCKETCHAT_UPSTREAM=${ROCKETCHAT_BACKEND_HOSTNAME}:${ROCKETCHAT_PORT}
+      - NGINX_PORT=80
+      - ROCKETCHAT_HOSTNAME=${ROCKETCHAT_HOSTNAME}
+    depends_on:
+      - rocketchat
+    volumes:
+      - ./conf/etc/nginx:/etc/nginx/templates:ro
