@@ -129,7 +129,7 @@ services:
 #    volumes:
 #      - ./conf/etc/wireguard:/etc/wireguard
     environment:
-      WG_HOST: 79.137.248.164
+      WG_HOST: 178.172.212.165
       PASSWORD: foobar123
       WG_PORT: 51820
       WG_DEFAULT_ADDRESS: 10.10.10.x
@@ -186,9 +186,16 @@ services:
     restart: unless-stopped
     environment:
       - ROCKETCHAT_UPSTREAM=${ROCKETCHAT_BACKEND_HOSTNAME}:${ROCKETCHAT_PORT}
-      - NGINX_PORT=81
+      - NGINX_PORT=80
       - ROCKETCHAT_HOSTNAME=${ROCKETCHAT_HOSTNAME}
     depends_on:
       - rocketchat
+    ports:
+      - 2121:80
     volumes:
-      - ./conf/etc/nginx:/etc/nginx/templates:ro
+      - ./conf/etc/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+    networks:
+      wg-internal:
+        ipv4_address: 10.8.1.11
+    dns:
+      - 10.8.1.10
